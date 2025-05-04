@@ -67,6 +67,8 @@ abstract class HtmlOperations {
         transformTableAsEmbed,
       ));
     }
+    if (element.isFormula) ops.addAll(mathToOp(element));
+
     return ops;
   }
 
@@ -106,6 +108,9 @@ abstract class HtmlOperations {
   /// Converts a table HTML element (`<table>`) to Delta operations.
   List<Operation> tableToOp(dom.Element element,
       [bool transformTableAsEmbed = false]);
+
+  /// Converts a math HTML element (`<math>`) to Delta operations.
+  List<Operation> mathToOp(dom.Element element);
 
   /// Sets custom HTML parts to extend the conversion capabilities.
   ///

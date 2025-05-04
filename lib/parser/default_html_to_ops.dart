@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 import 'package:flutter_quill_delta_from_html/parser/extensions/node_ext.dart';
 import 'package:flutter_quill_delta_from_html/parser/html_to_operation.dart';
 import 'package:flutter_quill_delta_from_html/parser/html_utils.dart';
+import 'package:flutter_quill_delta_from_html/parser/math_utils.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:flutter_quill_delta_from_html/parser/node_processor.dart';
 
@@ -400,6 +403,21 @@ class DefaultHtmlToOperations extends HtmlOperations {
           ops.addAll(divToOp(element));
         }
       }
+    }
+
+    return ops;
+  }
+
+  @override
+  List<Operation> mathToOp(dom.Element element) {
+    final List<Operation> ops = [];
+
+    final formula = MathUtils.parseMathRecursive(element);
+    if (formula.isNotEmpty) {
+      // {insert: {custom: {"formula":"math formula"}}}
+      ops.add(Operation.insert(<String, String>{
+        'custom': jsonEncode({'formula': formula}),
+      }));
     }
 
     return ops;
