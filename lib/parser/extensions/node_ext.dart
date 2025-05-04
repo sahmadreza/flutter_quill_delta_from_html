@@ -73,6 +73,9 @@ extension NodeExt on Element {
   bool get isTable =>
       ['table', 'tbody', 'thead', 'tfoot', 'tr', 'td'].contains(localName);
 
+  ///Ensure to detect math html tags
+  bool get isFormula => localName == 'math';
+
   String getSafeAttribute(String attr) {
     return attributes[attr] ?? '';
   }

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 import 'package:flutter_quill_delta_from_html/flutter_quill_delta_from_html.dart';
+import 'package:flutter_quill_delta_from_html/parser/math_utils.dart';
 import 'package:html/dom.dart' as dom;
 
 /// Processes a DOM [node], converting it into Quill Delta operations.
@@ -55,6 +58,17 @@ void processNode(
         }
       }
     } else {
+      if (node.isFormula) {
+        final formula = MathUtils.parseMathRecursive(node);
+        if (formula.isNotEmpty) {
+          delta.insert({
+            'custom': jsonEncode({'formula': formula})
+          });
+        }
+        // prevent duplicate math text
+        return;
+      }
+
       // Handle <span> tags
       if (node.isSpan) {
         final spanAttributes =
